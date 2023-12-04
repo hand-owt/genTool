@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<style>
+    .container{
+        display:flex;
+        flex-direction: column;
+        position: absolute;
+        top:-10000px;
+        left:-10000px;
+    }
+    .row{
+        display:flex;
+        justify-content: flex-start;
+        align-items: flex-start;
+    }
+    .col{
+        display:block;
+    }
+    .col img{
+        display:block;
+    }
+</style>
+
+<body>
+    <div>
+        Setting: <br/>
+        File : <input type="file" id="inputFile"> <br/>
+        Row : <input type="text" id="inputRow" value="8" /> <br/>
+        RowMargin : <input type="text" id="inputRowMargin" value="-10" /> <br/>
+        Col : <input type="text" id="inputCol" value="10" /> <br/>
+        ColMargin : <input type="text" id="inputColMargin" value="-10" /> <br/>
+        <button id="gen">Gen</button>
+    </div>
+    <div class="container">
+
+
+    </div>
+    <div class="result"></div>
+</body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+<script>
+    var img = "";
+    $("#inputFile").on("change",function(){
+        var fileList = $("#inputFile")[0].files;
+        var fr = new FileReader();
+        fr.onload = function () {
+            img = fr.result;
+        }
+        fr.readAsDataURL(fileList[0]);
+    })
+    $("#gen").on("click",genLoop);
+
+    function genLoop(){
+        var row = parseInt( $("#inputRow").val() );
+        var col = parseInt( $("#inputCol").val() );
+        var rowMargin = parseInt( $("#inputRowMargin").val() ) + "px";
+        var colMargin = parseInt( $("#inputColMargin").val() ) + "px";
+        var rowHtml = "";
+
+        //loop
+        for(var i=0;i<row;i++){
+            var colHtml = "";
+
+            for(var j=0;j<col;j++){
+                colHtml += `<div class="col" style="margin-left:${colMargin}"><img src="${img}"></div>`;
+            }
+
+            rowHtml += `<div class="row" style="margin-top:${rowMargin}">${colHtml}</div>`;
+        }
+        $(".container").empty();
+        $(".container").css({
+            "padding-top":parseInt( $("#inputRowMargin").val() ) * -1 + "px",
+            "padding-left":parseInt( $("#inputColMargin").val() ) * -1 + "px"
+        })
+        $(".container").append(rowHtml);
+
+
+        html2canvas($(".container")[0],{
+            backgroundColor:null,
+        }).then(function(canvas) {
+            $(".result").empty();
+            $(".result").append(canvas);
+        });
+    }
+
+</script>
+
+</html>
