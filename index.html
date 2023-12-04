@@ -26,6 +26,7 @@
     .col img{
         display:block;
     }
+    .download{display:none;}
 </style>
 
 <body>
@@ -42,7 +43,9 @@
 
 
     </div>
+    <a download="download.png" class="download">Download</a>
     <div class="result"></div>
+    
 </body>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -91,8 +94,17 @@
         }).then(function(canvas) {
             $(".result").empty();
             $(".result").append(canvas);
+
+            $(".download").show();
+            $(".download").off("click")
+            $(".download").on("click",function(){
+                var imageURI = canvas.toDataURL("image/jpg");
+                $(".download").attr("href",imageURI);
+            })
         });
     }
+
+    
 
 </script>
 
